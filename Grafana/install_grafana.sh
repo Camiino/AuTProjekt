@@ -25,8 +25,35 @@ echo "Installiere Grafana..."
 apt-get update
 apt-get install -y grafana
 
+# Sicherstellen, dass die Konfiguration unter /etc liegt
+echo "Stelle sicher, dass die Konfiguration unter /etc liegt..."
+mkdir -p /etc/grafana
+if [ ! -d "/etc/grafana" ]; then
+    echo "Fehler: Konnte Verzeichnis /etc/grafana nicht erstellen oder finden."
+    exit 1
+fi
+
+# Konfigurationsdatei anpassen, um sicherzustellen, dass alle Daten unter /etc gespeichert werden
+cat > /etc/grafana/grafana.ini << EOF
+[paths]
+data = /etc/grafana/data
+logs = /etc/grafana/logs
+plugins = /etc/grafana/plugins
+provisioning = /etc/grafana/provisioning
+EOF
+
+# Verzeichnisse erstellen
+mkdir -p /etc/grafana/data
+mkdir -p /etc/grafana/logs
+mkdir -p /etc/grafana/plugins
+mkdir -p /etc/grafana/provisioning
+
+# Berechtigungen setzen
+chown -R grafana:grafana /etc/grafana
+
 # Grafana Service starten und aktivieren
 echo "Starte Grafana Service..."
+systemctl daemon-reload
 systemctl start grafana-server
 systemctl enable grafana-server
 
@@ -51,6 +78,7 @@ Wichtige Informationen:
    Benutzer: admin
    Passwort: admin
    (Sie werden beim ersten Login aufgefordert, das Passwort zu ändern)
+3. Grafana-Konfiguration befindet sich unter /etc/grafana
 
 Nächste Schritte:
 ----------------
@@ -72,6 +100,6 @@ Troubleshooting:
 - Wenn der Service nicht startet: 
   sudo journalctl -u grafana-server.service
 - Log-Dateien befinden sich in: 
-  /var/log/grafana/grafana.log
+  /etc/grafana/logs/grafana.log
 ==============================================
 " 

@@ -1,105 +1,115 @@
 #!/bin/bash
 
-# Prüfen, ob das Skript als Root ausgeführt wird
+# Check if script is running as root
 if [ "$EUID" -ne 0 ]; then 
-    echo "Bitte als Root ausführen (mit sudo)"
+    echo "Please run as root (with sudo)"
     exit 1
 fi
 
-# Systemaktualisierung
-echo "System wird aktualisiert..."
+# System update
+echo "Updating system..."
 apt-get update
 apt-get upgrade -y
 
-# Installation der benötigten Pakete
-echo "Installiere benötigte Pakete..."
+# Install required packages
+echo "Installing required packages..."
 apt-get install -y apt-transport-https software-properties-common wget
 
-# Grafana Repository hinzufügen
-echo "Füge Grafana Repository hinzu..."
+# Add Grafana repository
+echo "Adding Grafana repository..."
 wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
 echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | tee /etc/apt/sources.list.d/grafana.list
 
-# Repository aktualisieren und Grafana installieren
-echo "Installiere Grafana..."
+# Update repository and install Grafana
+echo "Installing Grafana..."
 apt-get update
 apt-get install -y grafana
 
-# Sicherstellen, dass die Konfiguration unter /etc liegt
-echo "Stelle sicher, dass die Konfiguration unter /etc liegt..."
+# Ensure configuration is under /etc
+echo "Ensuring configuration is under /etc..."
 mkdir -p /etc/grafana
 if [ ! -d "/etc/grafana" ]; then
-    echo "Fehler: Konnte Verzeichnis /etc/grafana nicht erstellen oder finden."
+    echo "Error: Could not create or find directory /etc/grafana"
     exit 1
 fi
 
-# Konfigurationsdatei anpassen, um sicherzustellen, dass alle Daten unter /etc gespeichert werden
-cat > /etc/grafana/grafana.ini << EOF
+# Create directories
+mkdir -p /etc/grafana/data
+mkdir -p /etc/grafana/logs
+mkdir -p /etc/grafana/plugins
+mkdir -p /etc/grafana/provisioning
+
+# Backup and modify existing configuration file
+if [ -f "/etc/grafana/grafana.ini" ]; then
+    cp /etc/grafana/grafana.ini /etc/grafana/grafana.ini.bak
+    # Adjust paths in configuration file
+    sed -i 's|^;\?data = .*$|data = /etc/grafana/data|g' /etc/grafana/grafana.ini
+    sed -i 's|^;\?logs = .*$|logs = /etc/grafana/logs|g' /etc/grafana/grafana.ini
+    sed -i 's|^;\?plugins = .*$|plugins = /etc/grafana/plugins|g' /etc/grafana/grafana.ini
+    sed -i 's|^;\?provisioning = .*$|provisioning = /etc/grafana/provisioning|g' /etc/grafana/grafana.ini
+else
+    # If no configuration file exists, create one with paths
+    cat > /etc/grafana/grafana.ini << EOF
 [paths]
 data = /etc/grafana/data
 logs = /etc/grafana/logs
 plugins = /etc/grafana/plugins
 provisioning = /etc/grafana/provisioning
 EOF
+fi
 
-# Verzeichnisse erstellen
-mkdir -p /etc/grafana/data
-mkdir -p /etc/grafana/logs
-mkdir -p /etc/grafana/plugins
-mkdir -p /etc/grafana/provisioning
-
-# Berechtigungen setzen
+# Set permissions
 chown -R grafana:grafana /etc/grafana
 
-# Grafana Service starten und aktivieren
-echo "Starte Grafana Service..."
+# Start and enable Grafana service
+echo "Starting Grafana service..."
 systemctl daemon-reload
 systemctl start grafana-server
 systemctl enable grafana-server
 
-# Firewall-Regel hinzufügen (wenn UFW aktiv ist)
+# Add firewall rule (if UFW is active)
 if command -v ufw >/dev/null 2>&1; then
-    echo "Öffne Port 3000 in der Firewall..."
+    echo "Opening port 3000 in firewall..."
     ufw allow 3000/tcp
 fi
 
-# Statusüberprüfung
-echo "Überprüfe Grafana Status..."
+# Status check
+echo "Checking Grafana status..."
 systemctl status grafana-server
 
 echo "
 ==============================================
-Installation abgeschlossen!
+Installation complete!
 
-Wichtige Informationen:
+Important Information:
 ----------------------
-1. Grafana ist nun unter http://ihre-server-ip:3000 erreichbar
-2. Standard Login-Daten:
-   Benutzer: admin
-   Passwort: admin
-   (Sie werden beim ersten Login aufgefordert, das Passwort zu ändern)
-3. Grafana-Konfiguration befindet sich unter /etc/grafana
+1. Grafana is now accessible at http://your-server-ip:3000
+2. Default login credentials:
+   Username: admin
+   Password: admin
+   (You will be prompted to change the password on first login)
+3. Grafana configuration is located at /etc/grafana
 
-Nächste Schritte:
+Next Steps:
 ----------------
-1. Öffnen Sie Grafana im Browser
-2. Fügen Sie Prometheus als Datenquelle hinzu:
-   - Gehen Sie zu Configuration → Data Sources
-   - Wählen Sie 'Add data source'
-   - Wählen Sie Prometheus
-   - URL: http://localhost:9090 (oder Ihre Prometheus-URL)
+1. Open Grafana in your browser
+2. Add Prometheus as a data source:
+   - Go to Configuration → Data Sources
+   - Select 'Add data source'
+   - Choose Prometheus
+   - URL: http://localhost:9090 (or your Prometheus URL)
 
-3. Dashboard importieren:
-   - Gehen Sie zu Create → Import
-   - Geben Sie die Dashboard-ID 1860 ein (Node Exporter Full)
-   - Wählen Sie Ihre Prometheus-Datenquelle
-   - Klicken Sie auf Import
+3. Import Dashboard:
+   - Go to Create → Import
+   - Enter Dashboard ID 1860 (Node Exporter Full)
+   - Select your Prometheus data source
+   - Click Import
 
 Troubleshooting:
 --------------
-- Wenn der Service nicht startet: 
+- If service fails to start: 
   sudo journalctl -u grafana-server.service
-- Log-Dateien befinden sich in: 
+- Log files are located at: 
   /etc/grafana/logs/grafana.log
 ==============================================
 " 

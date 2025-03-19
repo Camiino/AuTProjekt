@@ -1,42 +1,42 @@
 #!/bin/bash
 
-# Prüfen ob Script als root läuft
+# Check if script is running as root
 if [ "$EUID" -ne 0 ]; then 
-    echo "Bitte als root ausführen (sudo)"
+    echo "Please run as root (sudo)"
     exit 1
 fi
 
-# Variablen definieren
+# Define variables
 VERSION="3.2.1"
 DOWNLOAD_URL="https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz"
 PROMETHEUS_HOME="/ect/prometheus"
 TEMP_DIR="/tmp/prometheus"
 
-# Benutzer erstellen
-echo "Erstelle prometheus Benutzer..."
+# Create user
+echo "Creating prometheus user..."
 useradd --no-create-home --shell /bin/false prometheus
 
-# Verzeichnisse erstellen
-echo "Erstelle Verzeichnisse..."
+# Create directories
+echo "Creating directories..."
 mkdir -p $PROMETHEUS_HOME
 mkdir -p $PROMETHEUS_HOME/data
 mkdir -p $TEMP_DIR
 
-# Prometheus herunterladen und entpacken
-echo "Lade Prometheus herunter..."
+# Download and extract Prometheus
+echo "Downloading Prometheus..."
 cd $TEMP_DIR
 wget $DOWNLOAD_URL
 tar xvfz prometheus-${VERSION}.linux-amd64.tar.gz
 
-# Dateien verschieben
-echo "Installiere Prometheus..."
+# Move files
+echo "Installing Prometheus..."
 cp prometheus-${VERSION}.linux-amd64/prometheus $PROMETHEUS_HOME/
 cp prometheus-${VERSION}.linux-amd64/promtool $PROMETHEUS_HOME/
 cp -r prometheus-${VERSION}.linux-amd64/consoles $PROMETHEUS_HOME/
 cp -r prometheus-${VERSION}.linux-amd64/console_libraries $PROMETHEUS_HOME/
 
-# Basis-Konfiguration erstellen
-echo "Erstelle Prometheus Konfiguration..."
+# Create base configuration
+echo "Creating Prometheus configuration..."
 cat > $PROMETHEUS_HOME/prometheus.yml << EOF
 global:
   scrape_interval: 15s
@@ -49,12 +49,12 @@ scrape_configs:
           instance: 'local-server'
 EOF
 
-# Berechtigungen setzen
-echo "Setze Berechtigungen..."
+# Set permissions
+echo "Setting permissions..."
 chown -R prometheus:prometheus $PROMETHEUS_HOME
 
-# Systemd Service erstellen
-echo "Erstelle Systemd Service..."
+# Create systemd service
+echo "Creating Systemd Service..."
 cat > /etc/systemd/system/prometheus.service << EOF
 [Unit]
 Description=Prometheus Server
@@ -76,17 +76,17 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-# Aufräumen
-echo "Räume temporäre Dateien auf..."
+# Cleanup
+echo "Cleaning up temporary files..."
 cd /
 rm -rf $TEMP_DIR
 
-# Service aktivieren und starten
-echo "Aktiviere und starte Prometheus Service..."
+# Enable and start service
+echo "Enabling and starting Prometheus service..."
 systemctl daemon-reload
 systemctl enable prometheus
 systemctl start prometheus
 
-echo "Installation abgeschlossen!"
-echo "Status überprüfen mit: systemctl status prometheus"
-echo "Prometheus UI ist erreichbar unter: http://localhost:9090" 
+echo "Installation complete!"
+echo "Check status with: systemctl status prometheus"
+echo "Prometheus UI available at: http://localhost:9090"

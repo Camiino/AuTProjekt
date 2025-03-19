@@ -7,9 +7,9 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Variablen definieren
-VERSION="2.45.0"
+VERSION="3.2.1"
 DOWNLOAD_URL="https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz"
-PROMETHEUS_HOME="/opt/prometheus"
+PROMETHEUS_HOME="/ect/prometheus"
 TEMP_DIR="/tmp/prometheus"
 
 # Benutzer erstellen

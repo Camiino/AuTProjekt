@@ -15,8 +15,8 @@ logging.basicConfig(level=logging.DEBUG)
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
-        user="root",
-        password="Lol212223",
+        user="admin",
+        password="admin",
         database="computer_booking"
     )
 

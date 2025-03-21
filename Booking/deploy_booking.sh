@@ -12,6 +12,24 @@ fi
 echo "=== Booking Component Deployment ==="
 echo "This script sets up the Booking website"
 
+# Bestimme die richtige Webserver-Gruppe basierend auf der Distribution
+if command -v apt-get &> /dev/null; then
+    # Debian/Ubuntu
+    WEB_GROUP="www-data"
+elif command -v dnf &> /dev/null; then
+    # Fedora
+    WEB_GROUP="apache"
+else
+    # Fallback
+    WEB_GROUP="www-data"
+fi
+
+# Prüfe, ob die Webserver-Gruppe existiert, sonst erstelle sie
+if ! getent group $WEB_GROUP > /dev/null; then
+    echo "Group $WEB_GROUP does not exist. Creating group..."
+    groupadd $WEB_GROUP
+fi
+
 # Prompt for system user
 read -p "Enter system username for the booking service: " SYSTEM_USER
 # Check if user exists
@@ -24,7 +42,7 @@ else
     useradd -m -s /bin/bash "$SYSTEM_USER"
     echo "$SYSTEM_USER:$USER_PASSWORD" | chpasswd
     # Add user to necessary groups
-    usermod -aG www-data "$SYSTEM_USER"
+    usermod -aG $WEB_GROUP "$SYSTEM_USER"
 fi
 
 # Prompt for database password
@@ -32,14 +50,24 @@ read -s -p "Enter database password for the booking service: " DB_PASSWORD
 echo ""
 
 # Define variables
-BOOKING_DIR="/var/www/html/booking"
+BOOKING_DIR="."
 DB_NAME="computer_booking"
 DB_USER="$SYSTEM_USER"  # Use the system user as database user
 
 # 1. Install dependencies
 echo "1. Installing dependencies..."
-apt-get update
-apt-get install -y apache2 php php-mysql mysql-server python3 python3-pip
+if command -v apt-get &> /dev/null; then
+    # Debian/Ubuntu
+    apt-get update
+    apt-get install -y apache2 php php-mysql mysql-server python3 python3-pip
+elif command -v dnf &> /dev/null; then
+    # Fedora
+    dnf update -y
+    dnf install -y httpd php php-mysqlnd mysql-server python3 python3-pip
+else
+    echo "Error: Package manager not supported"
+    exit 1
+fi
 
 # 2. Install Python dependencies
 echo "2. Installing Python dependencies..."
@@ -329,7 +357,7 @@ After=network.target
 
 [Service]
 User=$SYSTEM_USER
-Group=www-data
+Group=$WEB_GROUP
 WorkingDirectory=$BOOKING_DIR
 ExecStart=/usr/bin/python3 $BOOKING_DIR/booking_api.py
 Restart=always
@@ -362,7 +390,7 @@ a2ensite booking.conf
 
 # 10. Set permissions
 echo "10. Setting permissions..."
-chown -R $SYSTEM_USER:www-data $BOOKING_DIR
+chown -R $SYSTEM_USER:$WEB_GROUP $BOOKING_DIR
 chmod -R 755 $BOOKING_DIR
 
 # 11. Start services

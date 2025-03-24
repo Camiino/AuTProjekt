@@ -9,7 +9,7 @@ fi
 # Define variables
 VERSION="3.2.1"
 DOWNLOAD_URL="https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz"
-PROMETHEUS_HOME="/ect/prometheus"
+PROMETHEUS_HOME="/opt/prometheus"
 TEMP_DIR="/tmp/prometheus"
 
 # Create user

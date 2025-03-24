@@ -9,7 +9,7 @@ fi
 # Define variables
 VERSION="3.2.1"
 DOWNLOAD_URL="https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz"
-PROMETHEUS_HOME="/opt/prometheus"
+PROMETHEUS_HOME="/etc/prometheus"
 TEMP_DIR="/tmp/prometheus"
 
 # Create user
@@ -55,9 +55,9 @@ After=network-online.target
 User=prometheus
 Group=prometheus
 Type=simple
-ExecStart=/opt/prometheus/prometheus \
-    --config.file=/opt/prometheus/prometheus.yml \
-    --storage.tsdb.path=/opt/prometheus/data \
+ExecStart=/etc/prometheus/prometheus \
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/etc/prometheus/data \
     --storage.tsdb.retention.time=8w
 Restart=always
 

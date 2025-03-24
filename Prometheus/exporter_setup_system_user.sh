@@ -51,24 +51,23 @@ tar xvfz nvidia_gpu_exporter_${VERSION_NVIDIA}_linux_x86_64.tar.gz
 
 echo "Installing binaries"
 
-mkdir -p /etc/node_exporter/
-mkdir -p /etc/nvidia_gpu_exporter
-mkdir -p /etc/exporter_merger
+mkdir -p /opt/node_exporter/
+mkdir -p /opt/nvidia_gpu_exporter
+mkdir -p /opt/exporter_merger
 
-mv node_exporter-${VERSION_NODE}.linux-amd64/node_exporter /etc/node_exporter/
-mv nvidia_gpu_exporter /etc/nvidia_gpu_exporter/
-mv exporter-merger-v0.4.0.dirty-linux-amd64 /etc/exporter_merger/
-mv merger.yaml /etc/exporter_merger/
+mv node_exporter-${VERSION_NODE}.linux-amd64/node_exporter /opt/node_exporter/
+mv nvidia_gpu_exporter /opt/nvidia_gpu_exporter/
+mv exporter-merger-v0.4.0.dirty-linux-amd64 /opt/exporter_merger/
 
 # Berechtigungen setzen
-chown -R $EXPORTER_USER:$EXPORTER_GROUP /etc/node_exporter/
-chown -R $EXPORTER_USER:$EXPORTER_GROUP /etc/nvidia_gpu_exporter/
-chown -R $EXPORTER_USER:$EXPORTER_GROUP /etc/exporter_merger/
+chown -R $EXPORTER_USER:$EXPORTER_GROUP /opt/node_exporter/
+chown -R $EXPORTER_USER:$EXPORTER_GROUP /opt/nvidia_gpu_exporter/
+chown -R $EXPORTER_USER:$EXPORTER_GROUP /opt/exporter_merger/
 
 # Ausführungsrechte für Binärdateien sicherstellen
-chmod +x /etc/node_exporter/node_exporter
-chmod +x /etc/nvidia_gpu_exporter/nvidia_gpu_exporter
-chmod +x /etc/exporter_merger/exporter-merger-v0.4.0.dirty-linux-amd64
+chmod +x /opt/node_exporter/node_exporter
+chmod +x /opt/nvidia_gpu_exporter/nvidia_gpu_exporter
+chmod +x /opt/exporter_merger/exporter-merger-v0.4.0.dirty-linux-amd64
 
 echo "Generating system service files"
 
@@ -81,7 +80,7 @@ After=network.target
 Type=simple
 User=$EXPORTER_USER
 Group=$EXPORTER_GROUP
-ExecStart=/etc/node_exporter/node_exporter
+ExecStart=/opt/node_exporter/node_exporter --collector.netdev.address-info
 
 [Install]
 WantedBy=multi-user.target
@@ -99,7 +98,7 @@ Group=$EXPORTER_GROUP
 # Umgebungsvariablen für NVIDIA-Zugriff
 Environment="NVIDIA_VISIBLE_DEVICES=all"
 Environment="NVIDIA_DRIVER_CAPABILITIES=all"
-ExecStart=/etc/nvidia_gpu_exporter/nvidia_gpu_exporter
+ExecStart=/opt/nvidia_gpu_exporter/nvidia_gpu_exporter
 
 [Install]
 WantedBy=multi-user.target
@@ -114,13 +113,13 @@ After=network.target
 Type=simple
 User=$EXPORTER_USER
 Group=$EXPORTER_GROUP
-ExecStart=/etc/exporter_merger/exporter-merger-v0.4.0.dirty-linux-amd64 --config-path /etc/exporter_merger/merger.yaml
+ExecStart=/opt/exporter_merger/exporter-merger-v0.4.0.dirty-linux-amd64 --config-path /opt/exporter_merger/merger.yaml
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-cat > /etc/exporter_merger/merger.yaml << EOF
+cat > /opt/exporter_merger/merger.yaml << EOF
 exporters:
 - url: http://localhost:9100/metrics
 - url: http://localhost:9835/metrics

@@ -68,8 +68,7 @@ Type=simple
 ExecStart=/opt/prometheus/prometheus \
     --config.file=/opt/prometheus/prometheus.yml \
     --storage.tsdb.path=/opt/prometheus/data \
-    --web.console.templates=/opt/prometheus/consoles \
-    --web.console.libraries=/opt/prometheus/console_libraries
+    --storage.tsdb.retention.time=8m
 Restart=always
 
 [Install]

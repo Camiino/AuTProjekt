@@ -19,16 +19,19 @@ rule_files:
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
-  - job_name: "overview"
+  - job_name: "node1"
     file_sd_configs:
     - files:
-      - "/home/sersandr/monitoring/overview.json"
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-  - job_name: "eiba-dl"
+      - "/opt/prometheus/node1.json"
+    relabel_configs:
+     - source_labels: [__adress__]
+       target_label: instance
+       replacement: "node1"
+  - job_name: "node2"
     file_sd_configs:
     - files:
-      - "/home/sersandr/monitoring/eiba-dl.json"
-  - job_name: "eiba-dl2"
-    file_sd_configs:
-    - files:
-      - "/home/sersandr/monitoring/eiba-dl2.json"
+      - "/opt/prometheus/node2.json"
+    relabel_configs:
+     - source_labels: [__adress__]
+       target_label: instance
+       replacement: "node2"

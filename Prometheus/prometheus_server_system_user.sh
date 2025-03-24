@@ -24,6 +24,9 @@ mkdir -p $TEMP_DIR
 
 # Download and extract Prometheus
 echo "Downloading Prometheus..."
+cp prometheus.yml $PROMETHEUS_HOME/
+cp node1.json $PROMETHEUS_HOME/
+cp node2.json $PROMETHEUS_HOME/
 cd $TEMP_DIR
 wget $DOWNLOAD_URL
 tar xvfz prometheus-${VERSION}.linux-amd64.tar.gz
@@ -36,19 +39,6 @@ cp -r prometheus-${VERSION}.linux-amd64/consoles $PROMETHEUS_HOME/
 cp -r prometheus-${VERSION}.linux-amd64/console_libraries $PROMETHEUS_HOME/
 
 # Create base configuration
-echo "Creating Prometheus configuration..."
-cat > $PROMETHEUS_HOME/prometheus.yml << EOF
-global:
-  scrape_interval: 15s
-
-scrape_configs:
-  - job_name: 'node_exporter'
-    static_configs:
-      - targets: ['localhost:9100']
-        labels:
-          instance: 'local-server'
-EOF
-
 # Set permissions
 echo "Setting permissions..."
 chown -R prometheus:prometheus $PROMETHEUS_HOME
@@ -68,7 +58,7 @@ Type=simple
 ExecStart=/opt/prometheus/prometheus \
     --config.file=/opt/prometheus/prometheus.yml \
     --storage.tsdb.path=/opt/prometheus/data \
-    --storage.tsdb.retention.time=8m
+    --storage.tsdb.retention.time=8w
 Restart=always
 
 [Install]

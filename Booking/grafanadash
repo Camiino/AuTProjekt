@@ -1,0 +1,450 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Buchungskalender",
+      "tooltip": "",
+      "type": "link",
+      "url": "http://172.18.16.93:8000/index.php"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "dee5o5y4meps0b"
+      },
+      "description": "Hier werden die Buchungen der jeweiligen Rechner in einer Übersicht angezeigt. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text",
+              "wrapText": true
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#4caf50",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 17,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Buchungskalender",
+          "url": "http://172.18.16.93:8000/index.php"
+        }
+      ],
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Beginn"
+          }
+        ]
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "columns": [],
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "dee5n5yby6rr4f"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.computer_name"
+            }
+          ],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "method": "GET",
+          "parser": "backend",
+          "queryParams": "",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "http://172.18.16.93:5000/status",
+          "urlPath": "/status",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Buchungsübersicht",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "status": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "computer_name": 0,
+              "email": 2,
+              "end_time": 4,
+              "start_time": 3,
+              "status": 5,
+              "user": 1
+            },
+            "renameByName": {
+              "computer_name": "Rechner",
+              "email": "Email",
+              "end_time": "Ende",
+              "start_time": "Beginn",
+              "user": "Benutzer"
+            }
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "Beginn",
+            "substringEnd": 22,
+            "substringStart": 5
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "Ende",
+            "substringEnd": 22,
+            "substringStart": 5
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 17,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "afterRender": "",
+        "content": "<a href=\"http://172.18.16.93:8000/index.php\" target=\"_blank\">\n    <div class=\"center-container\">\n        <button class=\"buchungsBtn\">\n            Buchungskalender\n        </button>\n    </div>\n</a>\n\n<style>\n/* Centering Container - Dynamic Height */\n.center-container {\n    padding: 0.75rem 0 0 0;\n    display: flex;\n    justify-content: center;  /* Horizontally center */\n    align-items: center;      /* Vertically center */\n    width: 100%;\n    min-height: 100%; /* Ensures the div grows dynamically based on the content */\n}\n\n/* Button Styling */\n.buchungsBtn {\n    background-color: transparent;\n    padding: 1rem 2rem;\n    font-size: 1.5rem;\n    color: #45a050;\n    border: 2px solid #45a050;\n    cursor: pointer;\n    border-radius: 0.5rem;\n    font-weight: normal;\n    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);\n    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;\n}\n\n/* Hover Effect */\n.buchungsBtn:hover {\n    color: #1c1c1c;\n    background-color: #45a050;\n    font-weight: bolder;\n    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);\n    transform: translateY(-2px);\n}\n</style>\n",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "markdown"
+        },
+        "editors": [],
+        "externalStyles": [],
+        "helpers": "",
+        "renderMode": "everyRow",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A",
+          "withTransforms": true
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "max"
+            ]
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "dee5o5y4meps0b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text",
+              "wrapText": true
+            },
+            "filterable": true,
+            "inspect": false,
+            "width": 150
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rechner"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 1,
+                        "text": "🔴"
+                      },
+                      "1": {
+                        "index": 0,
+                        "text": "🟢"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 5,
+        "x": 17,
+        "y": 3
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "columns": [],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "http://172.18.16.93:5000/available",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "booked_by": true,
+              "id": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "available": 2,
+              "computer_name": 1,
+              "id": 0
+            },
+            "renameByName": {
+              "availability": "Buchung",
+              "available": "Status",
+              "booked_by": "Nutzer",
+              "computer_name": "Rechner"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "id"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "2025-02-25T10:15:10.740Z",
+    "to": "2025-02-25T22:15:10.740Z"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "New dashboard",
+  "uid": "dee5nboa2t3b4b",
+  "version": 62,
+  "weekStart": ""
+}

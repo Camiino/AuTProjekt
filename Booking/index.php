@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -69,7 +69,7 @@
         // Fetch computers from API
         async function fetchComputers() {
           try {
-            let response = await fetch("http://172.18.16.93:5000/computers");
+            let response = await fetch("http://localhost:5000/computers");
             let data = await response.json();
             console.log("Computers from DB:", data);
             return data.map(item => item.name);
@@ -82,7 +82,7 @@
         // Fetch bookings from API
         async function fetchBookings() {
           try {
-            let response = await fetch("http://172.18.16.93:5000/status");
+            let response = await fetch("http://localhost:5000/status");
             let data = await response.json();
             console.log("Raw booking data from API:", data);
             bookingsData = data;

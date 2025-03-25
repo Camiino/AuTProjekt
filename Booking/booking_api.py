@@ -15,8 +15,8 @@ logging.basicConfig(level=logging.DEBUG)
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
-        user="admin",
-        password="admin",
+        user="aut",
+        password="aut",
         database="computer_booking"
     )
 
@@ -111,7 +111,6 @@ def check_availability():
         for row in cursor.fetchall():
             row["end_time"] = row["end_time"].strftime('%d.%m.%Y')  # Format date
             booked_computers[row["computer_name"]] = row
-
         # Query for next upcoming bookings for ALL computers
         upcoming_query = """
             SELECT computer_name, user, start_time 

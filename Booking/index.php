@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -69,7 +69,7 @@
         // Fetch computers from API
         async function fetchComputers() {
           try {
-            let response = await fetch("http://localhost:5000/computers");
+            let response = await fetch("http://172.17.21.50:5000/computers");
             let data = await response.json();
             console.log("Computers from DB:", data);
             return data.map(item => item.name);
@@ -82,7 +82,7 @@
         // Fetch bookings from API
         async function fetchBookings() {
           try {
-            let response = await fetch("http://localhost:5000/status");
+            let response = await fetch("http://172.17.21.50:5000/status");
             let data = await response.json();
             console.log("Raw booking data from API:", data);
             bookingsData = data;
@@ -271,14 +271,21 @@
               barContainer.style.height = "100%";
               barContainer.style.overflow = "hidden";
 
-              // Assign stacking positions based on consistent PC height
-              const pcHeightMap = {
-                  "PC-1": 30,
-                  "PC-2": 50,
-                  "PC-3": 70,
-                  "PC-4": 90,
-                  "PC-5": 110
-              };
+
+              // Extract unique PC names globally
+              const uniqueComputers = [...new Set(bookingsData.map(b => b.computer_name))];
+
+              // Sort alphabetically (optional, for consistency)
+              uniqueComputers.sort();
+
+              // Fixed vertical position for each computer
+              const pcHeightMap = {};
+              const heightGap = 20;
+
+              uniqueComputers.forEach((name, index) => {
+                  pcHeightMap[name] = index * heightGap;
+              });
+
 
               dailyBookings.forEach(booking => {
                   const bookingId = `${booking.computer_name}-${booking.user}`;

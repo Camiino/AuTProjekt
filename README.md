@@ -1,5 +1,5 @@
 # AuTProjekt
-# Anlegen eines neuen PCs in der überwachung
+# Anlegen eines neuen PCs in der Überwachung
 1) installation der Node-Exporter auf neuen Rechner:
     ```
    $ wget https://raw.githubusercontent.com/Camiino/AuTProjekt/refs/heads/main/Prometheus/exporter_setup_system_user.sh

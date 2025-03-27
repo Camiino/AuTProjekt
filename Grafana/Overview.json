@@ -38,6 +38,218 @@
   "panels": [
     {
       "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 9,
+      "options": {
+        "afterRender": "",
+        "content": "<a href=\"http://172.17.21.50:8000/index.php\" target=\"_blank\">\n    <div class=\"center-container\">\n        <button class=\"buchungsBtn\">\n            Buchungskalender\n        </button>\n    </div>\n</a>\n\n<style>\n/* Centering Container - Dynamic Height */\n.center-container {\n    padding: 0.75rem 0 0 0;\n    display: flex;\n    justify-content: center;  /* Horizontally center */\n    align-items: center;      /* Vertically center */\n    width: 100%;\n    min-height: 100%; /* Ensures the div grows dynamically based on the content */\n}\n\n/* Button Styling */\n.buchungsBtn {\n    background-color: transparent;\n    padding: 1rem 2rem;\n    font-size: 1.5rem;\n    color: #45a050;\n    border: 2px solid #45a050;\n    cursor: pointer;\n    border-radius: 0.5rem;\n    font-weight: normal;\n    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);\n    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;\n}\n\n/* Hover Effect */\n.buchungsBtn:hover {\n    color: #1c1c1c;\n    background-color: #45a050;\n    font-weight: bolder;\n    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);\n    transform: translateY(-2px);\n}\n</style>\n",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "markdown"
+        },
+        "editors": [],
+        "externalStyles": [],
+        "helpers": "",
+        "renderMode": "everyRow",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "5.7.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 1,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "max"
+            ]
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "degwnadyx4ikgb"
+      },
+      "description": "Hier werden die Buchungen der jeweiligen Rechner in einer Übersicht angezeigt. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text",
+              "wrapText": true
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#4caf50",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 18,
+        "x": 6,
+        "y": 0
+      },
+      "id": 7,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Buchungskalender",
+          "url": "http://172.18.16.93:8000/index.php"
+        }
+      ],
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Email"
+          }
+        ]
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "degwnadyx4ikgb"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "http://localhost:5000/status",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Buchungsübersicht",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "status": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "computer_name": 0,
+              "email": 2,
+              "end_time": 4,
+              "start_time": 3,
+              "status": 5,
+              "user": 1
+            },
+            "renameByName": {
+              "computer_name": "Rechner",
+              "email": "Email",
+              "end_time": "Ende",
+              "start_time": "Beginn",
+              "user": "Benutzer"
+            }
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "Beginn",
+            "substringEnd": 22,
+            "substringStart": 5
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "Ende",
+            "substringEnd": 22,
+            "substringStart": 5
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
         "type": "yesoreyeram-infinity-datasource",
         "uid": "degwnadyx4ikgb"
       },
@@ -133,10 +345,10 @@
         ]
       },
       "gridPos": {
-        "h": 16,
+        "h": 14,
         "w": 6,
         "x": 0,
-        "y": 0
+        "y": 3
       },
       "id": 8,
       "options": {
@@ -215,225 +427,49 @@
     },
     {
       "datasource": {
-        "type": "yesoreyeram-infinity-datasource",
-        "uid": "degwnadyx4ikgb"
-      },
-      "description": "Hier werden die Buchungen der jeweiligen Rechner in einer Übersicht angezeigt. ",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "left",
-            "cellOptions": {
-              "type": "color-text",
-              "wrapText": true
-            },
-            "filterable": true,
-            "inspect": false
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#4caf50",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 6,
-        "y": 0
-      },
-      "id": 7,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "Buchungskalender",
-          "url": "http://172.18.16.93:8000/index.php"
-        }
-      ],
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Beginn"
-          }
-        ]
-      },
-      "pluginVersion": "11.5.2",
-      "targets": [
-        {
-          "columns": [],
-          "datasource": {
-            "type": "yesoreyeram-infinity-datasource",
-            "uid": "degwnadyx4ikgb"
-          },
-          "filters": [],
-          "format": "table",
-          "global_query_id": "",
-          "parser": "backend",
-          "refId": "A",
-          "root_selector": "",
-          "source": "url",
-          "type": "json",
-          "url": "http://localhost:5000/status",
-          "url_options": {
-            "data": "",
-            "method": "GET"
-          }
-        }
-      ],
-      "title": "Buchungsübersicht",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "status": true
-            },
-            "includeByName": {},
-            "indexByName": {
-              "computer_name": 0,
-              "email": 2,
-              "end_time": 4,
-              "start_time": 3,
-              "status": 5,
-              "user": 1
-            },
-            "renameByName": {
-              "computer_name": "Rechner",
-              "email": "Email",
-              "end_time": "Ende",
-              "start_time": "Beginn",
-              "user": "Benutzer"
-            }
-          }
-        },
-        {
-          "id": "formatString",
-          "options": {
-            "outputFormat": "Substring",
-            "stringField": "Beginn",
-            "substringEnd": 22,
-            "substringStart": 5
-          }
-        },
-        {
-          "id": "formatString",
-          "options": {
-            "outputFormat": "Substring",
-            "stringField": "Ende",
-            "substringEnd": 22,
-            "substringStart": 5
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "datasource",
-        "uid": "-- Dashboard --"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 5,
-        "x": 18,
-        "y": 0
-      },
-      "id": 9,
-      "options": {
-        "afterRender": "",
-        "content": "<a href=\"http://172.17.21.50:8000/index.php\" target=\"_blank\">\n    <div class=\"center-container\">\n        <button class=\"buchungsBtn\">\n            Buchungskalender\n        </button>\n    </div>\n</a>\n\n<style>\n/* Centering Container - Dynamic Height */\n.center-container {\n    padding: 0.75rem 0 0 0;\n    display: flex;\n    justify-content: center;  /* Horizontally center */\n    align-items: center;      /* Vertically center */\n    width: 100%;\n    min-height: 100%; /* Ensures the div grows dynamically based on the content */\n}\n\n/* Button Styling */\n.buchungsBtn {\n    background-color: transparent;\n    padding: 1rem 2rem;\n    font-size: 1.5rem;\n    color: #45a050;\n    border: 2px solid #45a050;\n    cursor: pointer;\n    border-radius: 0.5rem;\n    font-weight: normal;\n    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);\n    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;\n}\n\n/* Hover Effect */\n.buchungsBtn:hover {\n    color: #1c1c1c;\n    background-color: #45a050;\n    font-weight: bolder;\n    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);\n    transform: translateY(-2px);\n}\n</style>\n",
-        "contentPartials": [],
-        "defaultContent": "The query didn't return any results.",
-        "editor": {
-          "format": "auto",
-          "language": "markdown"
-        },
-        "editors": [],
-        "externalStyles": [],
-        "helpers": "",
-        "renderMode": "everyRow",
-        "styles": "",
-        "wrap": true
-      },
-      "pluginVersion": "5.7.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "datasource",
-            "uid": "-- Dashboard --"
-          },
-          "panelId": 1,
-          "refId": "A"
-        }
-      ],
-      "title": "",
-      "transformations": [
-        {
-          "id": "reduce",
-          "options": {
-            "includeTimeField": false,
-            "mode": "reduceFields",
-            "reducers": [
-              "max"
-            ]
-          }
-        }
-      ],
-      "type": "marcusolsson-dynamictext-panel"
-    },
-    {
-      "datasource": {
         "type": "prometheus",
         "uid": "aegauflx75wqob"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepBefore",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 4,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -450,41 +486,37 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
+        "h": 9,
+        "w": 18,
         "x": 6,
         "y": 8
       },
       "id": 10,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "11.5.2",
       "targets": [
         {
           "editorMode": "code",
           "expr": "sum(nvidia_smi_power_draw_instant_watts{instance=~\"$nodes\"}) * 343.96 / 1000 * 24",
-          "legendFormat": "__auto",
+          "legendFormat": "CO2 emissions per day",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Current C02 emissions per day",
-      "type": "stat"
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -507,6 +539,7 @@
           "fieldMinMax": false,
           "links": [
             {
+              "targetBlank": true,
               "title": "go to dashboard",
               "url": "/d/vlvPlrgnk/custom-default?orgId=1&from=now-5m&to=now&timezone=browser&var-job=$nodes"
             }
@@ -525,13 +558,13 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 17
       },
       "id": 1,
-      "maxPerRow": 4,
+      "maxPerRow": 12,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -556,7 +589,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max(node_uname_info{instance=~\"$nodes\"}) by(instance, release, machine, version)",
+          "expr": "node_uname_info{instance=~\"$nodes\"} ",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -572,11 +605,17 @@
           "options": {
             "excludeByName": {
               "Time": true,
-              "Value": true
+              "Value": true,
+              "__name__": true,
+              "domainname": true,
+              "job": true,
+              "nodename": true
             },
             "includeByName": {},
             "indexByName": {},
-            "renameByName": {}
+            "renameByName": {
+              "machine": "kernel"
+            }
           }
         }
       ],
@@ -618,7 +657,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 21
       },
       "id": 5,
       "options": {
@@ -637,8 +676,6 @@
         "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
-      "repeat": "nodes",
-      "repeatDirection": "h",
       "targets": [
         {
           "datasource": {
@@ -646,11 +683,12 @@
             "uid": "aegauflx75wqob"
           },
           "editorMode": "code",
-          "expr": "(1 - (node_memory_MemAvailable_bytes{instance=~\"$nodes\"} / node_memory_MemTotal_bytes{instance=~\"$nodes\"})) * 100",
+          "exemplar": false,
+          "expr": "(1 - avg by (instance)(node_memory_MemAvailable_bytes{instance=~\"$nodes\"} / node_memory_MemTotal_bytes{instance=~\"$nodes\"})) * 100 ",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "B"
         }
       ],
@@ -672,8 +710,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "#EAB839",
@@ -693,7 +730,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 31
       },
       "id": 4,
       "options": {
@@ -712,14 +749,15 @@
         "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
-      "repeat": "nodes",
-      "repeatDirection": "h",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\", instance=~\"$nodes\"}[$__rate_interval])))",
+          "exemplar": false,
+          "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{instance=~\"$nodes\",mode=\"idle\"}[2m])) * 100)",
+          "format": "time_series",
+          "instant": true,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -741,8 +779,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "#EAB839",
@@ -762,14 +799,23 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 41
       },
       "id": 3,
       "maxPerRow": 4,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "vertical",
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -777,29 +823,29 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
+        "showUnfilled": true,
         "sizing": "auto",
-        "text": {}
+        "valueMode": "color"
       },
       "pluginVersion": "11.5.2",
-      "repeat": "nodes",
-      "repeatDirection": "h",
       "targets": [
         {
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "max by(uuid) (nvidia_smi_utilization_gpu_ratio{instance=~\"$nodes\"})",
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max by(instance, uuid) (nvidia_smi_utilization_gpu_ratio{instance=~\"$nodes\"})",
+          "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
+          "instant": true,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "useBackend": false
         }
       ],
       "title": "GPU-Utilization",
-      "type": "gauge"
+      "type": "bargauge"
     },
     {
       "datasource": {
@@ -809,15 +855,47 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -833,45 +911,42 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 51
       },
       "id": 2,
       "maxPerRow": 12,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showPercentChange": false,
-        "textMode": "value",
-        "wideLayout": true
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "11.5.2",
-      "repeat": "nodes",
-      "repeatDirection": "h",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "nvidia_smi_temperature_gpu{instance=~\"$nodes\"}",
+          "exemplar": false,
+          "expr": "max by(instance, uuid) (nvidia_smi_temperature_gpu{instance=~\"$nodes\"})",
+          "format": "time_series",
+          "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Temperature overview",
-      "type": "stat"
+      "type": "timeseries"
     }
   ],
   "preload": false,
-  "refresh": "",
+  "refresh": "10s",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
@@ -913,6 +988,6 @@
   "timezone": "browser",
   "title": "Overview",
   "uid": "cegstnmuf60owf",
-  "version": 27,
+  "version": 34,
   "weekStart": ""
 }

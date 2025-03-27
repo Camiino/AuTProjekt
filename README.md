@@ -22,6 +22,16 @@
        target_label: instance
        replacement: "<name>"
    ```
+   Hinzufügen der MAC-Addresse und des Namens in der Liste bekannter Hostnames in dynamic_ips.py:
+   ```
+   hostnames = {<MAC-ADDRESS>:<NAME>}
+   ```
+4) Aktualisierung der entsprechenden Dienste:
+   ```
+   $ sudo systemctl daemon-reload
+   $ sudo systemctl restart prometheus.service
+   $ sudo systemctl restart dynamic_ips.service
+   ```
 
 
   

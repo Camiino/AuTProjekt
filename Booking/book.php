@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $api_url = "http://localhost:5000/book"; // Flask API URL
+    $api_url = "http://172.17.21.50:5000/book"; // Flask API URL
     $payload = json_encode([
         "computer_name" => $computer,
         "user" => $user,

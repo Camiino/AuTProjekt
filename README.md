@@ -1,37 +1,65 @@
-# AuTProjekt
-# Anlegen eines neuen PCs in der Überwachung
-1) installation der Node-Exporter auf neuen Rechner:
-    ```
-   $ wget https://raw.githubusercontent.com/Camiino/AuTProjekt/refs/heads/main/Prometheus/exporter_setup_system_user.sh
-   $ sudo chmod +x exporter_setup_system_user.sh
-   $ sudo ./exporter_setup_system_user.sh
-   ```
-2) Ermitteln der MAC-Addresses:
-   ```
-   $ ifconfig
-   ```
-3) Festlegung des gewünschten PC-Namens:
-   Anlegung eines neuen Jobs in Prometheus.yml unter scrape_configs:
-   ```
-   - job_name: "<name>"
-    file_sd_configs:
-    - files:
-      - "/opt/prometheus/<name>.json"
-    relabel_configs:
-     - source_labels: [__adress__]
-       target_label: instance
-       replacement: "<name>"
-   ```
-   Hinzufügen der MAC-Addresse und des Namens in der Liste bekannter Hostnames in dynamic_ips.py:
-   ```
-   hostnames = {<MAC-ADDRESS>:<NAME>}
-   ```
-4) Aktualisierung der entsprechenden Dienste:
-   ```
-   $ sudo systemctl daemon-reload
-   $ sudo systemctl restart prometheus.service
-   $ sudo systemctl restart dynamic_ips.service
-   ```
+# AutProjekt - Dashboard for Network Monitoring and Issue Detection
+
+## 📋 Overview & Features
+
+This project provides a comprehensive booking system with integrated monitoring capabilities, combining:
+
+- **Prometheus & Grafana**: Complete monitoring stack for real-time metrics collection and visualization through interactive dashboards
+- **Booking System**: Modern application for managing booking processes with automated workflows
+
+## 🛠️ Technology Stack
+
+- **Frontend**: PHP with calendar view
+- **Backend**: Python Flask API
+- **Monitoring**: 
+  - Grafana for visualization
+  - Prometheus for metric collection
+  - Node Exporter for system metrics
+- **Database**: MySQL/MariaDB
+
+## 📦 Installation
+
+### Prerequisites
+
+- Linux operating system (Ubuntu/Debian recommended)
+- Root access or sudo privileges 
+- Internet connection for package installation
+
+### Setup
+
+Clone the repository:
+```bash
+git clone [repository-url]
+cd AutProjekt
+```
+
+#### 📊 Monitoring
+
+To enable monitoring capabilities, both Prometheus and Grafana need to be installed and configured:
+
+1. **Install Prometheus**
+   - Follow the installation guide in the [Prometheus Documentation](./Prometheus/README.md)
 
 
-  
+2. **Install Grafana**
+   - Follow the installation guite in the [Grafana Documentation](./Grafana/README.md)
+
+
+#### 🎫 Booking System
+
+**Install Booking**
+   - Follow the installation guite in the [Booking Documentation](./Booking/README.md)
+
+
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Contributors
+
+- Albert Julianto
+- Andre Joseph Sers  
+- Gabriel Zemmit
+- M Subie Hiswani
+- Ediz Demir

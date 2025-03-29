@@ -1,5 +1,8 @@
 # AutProjekt - Dashboard for Network Monitoring and Issue Detection
 
+This project was developed as part of the "Automation Technology Project" course at the Technical University of Berlin in collaboration with the Fraunhofer Institute for Machine Tools and Manufacturing Technology (IWF), Department of Industrial Automation Technology.
+
+
 ## 📋 Overview & Features
 
 This project provides a comprehensive booking system with integrated monitoring capabilities, combining:
